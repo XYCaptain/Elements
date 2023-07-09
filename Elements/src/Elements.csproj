@@ -10,7 +10,7 @@
     <Summary>The Elements library provides object types for generating the built environment.</Summary>
     <PackageProjectUrl>https://github.com/hypar-io/elements</PackageProjectUrl>
     <RepositoryUrl>https://github.com/hypar-io/elements</RepositoryUrl>
-    <Version>1.0.1.2-Dev</Version>
+    <Version>1.0.1.4-Dev</Version>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <AssemblyVersion>1.0.0.1</AssemblyVersion>
   </PropertyGroup>

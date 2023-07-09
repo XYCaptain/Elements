@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using Elements.Geometry.Solids;
+using glTFLoader.Schema;
+using System.Xml.Linq;
 
 namespace Elements.Geometry.Solids
 {
@@ -418,12 +421,23 @@ namespace Elements.Geometry
 			var csga = a.ToCsg();
 			var csgb = b.ToCsg();
 			csga = csga.Subtract(csgb);
-			
+
 			var result = new Mesh();
 			csga.Tessellate(ref result);
 			return result;
 		}
+		
+		public static Mesh Difference(Mesh a, Mesh b)
+		{
+			var csga = ToSolid(a);
+			var csgb = ToSolid(b);
+			csga = Solid.Difference(new ConstructedSolid(csga), new ConstructedSolid(csgb));
 
+			var result = new Mesh();
+			csga.Tessellate(ref result);
+			return result;
+		}
+		
 		public static Mesh Intersect(Mesh a, Mesh b)
 		{
 			var csga = a.ToCsg();
@@ -444,6 +458,27 @@ namespace Elements.Geometry
 			var result = new Mesh();
 			csga.Tessellate(ref result);
 			return result;
+		}
+
+		public static Mesh Slice(Mesh a, Plane b)
+		{
+			var solid = Mesh.ToSolid(a);
+			solid.Slice(b);
+
+
+			return solid.ToMesh();
+		}
+
+		public static Solid ToSolid(Mesh mseh)
+		{
+			var solid = new Solid();
+
+			foreach (var item in mseh.Triangles)
+			{
+				solid.AddFace(item.ToPolygon(), mergeVerticesAndEdges: true);
+			}
+
+			return solid;
 		}
 	}
 }
