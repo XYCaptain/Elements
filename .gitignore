@@ -343,3 +343,4 @@ Elements/test/*.gltf
 !Elements/test/models/**/*.glb
 
 *.dxf
+/Elements.Serialization.IFC/test/models/IFC2X3/dangeng.ifc
