@@ -774,39 +774,41 @@ namespace Elements.Tests
 		public void GenReba()
 		{
 			var ts0 = new List<Vector3> { new Vector3(0, 0, 0), new Vector3(-99.2453, -99.2453, 0) };
+			var line1 = new Line(new Vector3(0, 0, 0), new Vector3(-99.2453, -99.2453, 0));
+			var line2 = new Line(new Vector3(-222.157, -48.3336, 0), new Vector3(-222.157, 1997.67, 0));
 			var ts1 = new List<Vector3> { new Vector3(-222.157, -48.3336, 0), new Vector3(-222.157, 1997.67, 0) };
 			var rad = CalBulgeRadius(ts0.Last(), ts1.First(), 2.41421);
 			var t0end = (ts0.Last() + new Vector3(0.707107, -0.707107, 0));
 			var t1end = (ts1.First() + new Vector3(-1, 0, 0));
 
-			var abs = GetIntersectionPoint(ts0.Last().X, ts0.Last().Y, t0end.X, t0end.Y, ts1.First().X, ts1.First().Y, t1end.X, t1end.Y);
-			var center = new Vector3(abs[0], abs[1], 0);
-			var mid = (ts0.Last() + ts1.First()) / 2;
-			var aa = (mid - center);
-			var p3 = rad / aa.Length() * aa * 0.8 + center;
-			var arc0 = Arc.ByThreePoints(ts0.Last(), p3, ts1.First()).ToPolyline().Vertices.ToList();
-			ts0.AddRange(arc0.ToArray());
-			ts0.AddRange(ts1);
+			//var abs = GetIntersectionPoint(ts0.Last().X, ts0.Last().Y, t0end.X, t0end.Y, ts1.First().X, ts1.First().Y, t1end.X, t1end.Y);
+			//var center = new Vector3(abs[0], abs[1], 0);
+			//var mid = (ts0.Last() + ts1.First()) / 2;
+			//var aa = (mid - center);
+			//var p3 = rad / aa.Length() * aa * 0.8 + center;
+			//var arc0 = Arc.ByThreePoints(ts0.Last(), p3, ts1.First()).ToPolyline().Vertices.ToList();
+			//ts0.AddRange(arc0.ToArray());
+			//ts0.AddRange(ts1);
 
-			var ts2 = new List<Vector3> { new Vector3(-99.2453, 2048.58, 0), new Vector3(-4.54747e-13, 1949.33, 0) };
-			rad = CalBulgeRadius(ts1.Last(), ts2.First(), 2.41421);
-			t0end = (ts1.Last() + new Vector3(-1, -6.04439e-06, 0));
-			t1end = (ts2.First() + new Vector3(-0.707107, -0.707107, 0));
+			//var ts2 = new List<Vector3> { new Vector3(-99.2453, 2048.58, 0), new Vector3(-4.54747e-13, 1949.33, 0) };
+			//rad = CalBulgeRadius(ts1.Last(), ts2.First(), 2.41421);
+			//t0end = (ts1.Last() + new Vector3(-1, -6.04439e-06, 0));
+			//t1end = (ts2.First() + new Vector3(-0.707107, -0.707107, 0));
 
-			abs = GetIntersectionPoint(ts2.First().X, ts2.First().Y, t1end.X, t1end.Y, ts1.Last().X, ts1.Last().Y, t0end.X, t0end.Y);
-			center = new Vector3(abs[0], abs[1], 0);
-			mid = (ts1.Last() + ts2.First()) / 2;
-			aa = (mid - center);
-			p3 = rad / aa.Length() * aa * 0.8 + center;
-			arc0 = Arc.ByThreePoints(ts1.Last(), p3, ts2.First()).ToPolyline().Vertices.ToList();
-			ts0.AddRange(arc0.ToArray());
-			ts0.AddRange(ts2);
+			//abs = GetIntersectionPoint(ts2.First().X, ts2.First().Y, t1end.X, t1end.Y, ts1.Last().X, ts1.Last().Y, t0end.X, t0end.Y);
+			//center = new Vector3(abs[0], abs[1], 0);
+			//mid = (ts1.Last() + ts2.First()) / 2;
+			//aa = (mid - center);
+			//p3 = rad / aa.Length() * aa * 0.8 + center;
+			//arc0 = Arc.ByThreePoints(ts1.Last(), p3, ts2.First()).ToPolyline().Vertices.ToList();
+			//ts0.AddRange(arc0.ToArray());
+			//ts0.AddRange(ts2);
 
-			var path = new Polyline(ts0);
-			var outer = new Circle(new Transform() { Matrix = new Matrix() { } }, 1).ToPolygon();
-			var solid = Solid.SweepFaceAlongCurve(outer, null, path);
+			//var path = new Polyline(ts0);
+			//var outer = new Circle(new Transform() { Matrix = new Matrix() { } }, 1).ToPolygon();
+			//var solid = Solid.SweepFaceAlongCurve(outer, null, path);
 
-			solid.ToGlb("models/GenReba.glb");
+			//solid.ToGlb("models/GenReba.glb");
 		}
 
 
@@ -819,40 +821,6 @@ namespace Elements.Tests
 			//根据正玄值反推
 			double radius = (pointLen / 2) / Math.Sin(cicleAngle / 2);
 			return Math.Abs(radius);
-		}
-
-		double[] GetIntersectionPoint(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4)
-		{
-			var a = (y2 - y1) / (x2 - x1); //需考虑分母不能为0 即x2=x1 l1垂直于x轴
-			var b = (y4 - y3) / (x4 - x3); //需考虑分母不能为0 即x4=x3 l2垂直于x轴
-
-
-			if (a == b)
-			{//斜率相同,说明平行 无交点
-				throw new Exception("两直线平行,无交点");
-			}
-
-			double x, y = 0;
-
-			if (x2 == x1)
-			{//L1垂直于x轴  则x=x1=x2 a=infinity 想办法消除a
-				x = x1;
-				////(y-y3)/(x-x3)=b 且x=x1 变换得y=bx1-bx3+y3
-				y = b * x1 - b * x3 + y3;
-				return new double[] { x, y };
-			}
-			if (x4 == x3)
-			{//L2垂直于x轴 则x=x3=x4 b=infinity 
-				x = x3;
-				y = a * x - a * x1 + y1;
-				return new double[] { x, y };
-			}
-
-			x = (a * x1 - y1 + y3 - b * x3) / (a - b);
-			y = a * x - a * x1 + y1;
-
-
-			return new double[] { x, y };
 		}
 
 		private class DebugInfo
