@@ -43,7 +43,7 @@ namespace Elements.Tests
         {
             var json = @"
             {
-  ""Mesh"": null,
+              ""Mesh"": null,
 }
             ";
             Newtonsoft.Json.JsonConvert.DeserializeObject<InputsWithMesh>(json, new[] { new MeshConverter() });

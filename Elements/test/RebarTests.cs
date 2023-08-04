@@ -49,7 +49,7 @@ namespace Elements
 			this.Model.AddElement(new ModelCurve(arc, material: BuiltInMaterials.Black));
 			if (arc.Start.DistanceTo(line2).ApproximatelyEquals(0))
 			{
-				this.Model.AddElement(new ModelCurve(new Line(arc.Start,line2.End), material: BuiltInMaterials.Black));
+				this.Model.AddElement(new ModelCurve(new Line(arc.Start, line2.End), material: BuiltInMaterials.Black));
 			}
 			if (arc.End.DistanceTo(line2).ApproximatelyEquals(0))
 			{
@@ -126,7 +126,7 @@ namespace Elements
 
 				var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(solid) });
 				var solidElement = new GeometricElement(representation: rep, isElementDefinition: true, name: xml.RebarInfos[rebar.Key].Name);
-
+				//var modelcurrencies = new ModelCurve(path, transform: new Transform(), material: BuiltInMaterials.Black, isElementDefinition: true);
 				refcurs.Add(rebar.Key, path);
 				refeles.Add(rebar.Key, solidElement);
 			}
@@ -144,7 +144,7 @@ namespace Elements
 						var instance = refeles[ins.RebarRefName].CreateInstance(new Transform(ins.Matrix), name: ins.Name);
 						this.Model.AddElement(instance);
 					}
-		
+
 				}
 			}
 			var t = new Matrix();
